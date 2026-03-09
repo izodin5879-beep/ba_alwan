@@ -5,9 +5,8 @@
     <title>Kuiz Warna Bahasa Arab Tahun 6</title>
     <style>
         body { 
-            /* Latar belakang ceria bertema pastel */
             background: linear-gradient(135deg, #FFDEE9 0%, #B5FFFC 100%);
-            font-family: 'Arial', sans-serif;
+            font-family: 'Plus Jakarta Sans', sans-serif;
             display: flex; justify-content: center; align-items: center;
             min-height: 100vh; margin: 0;
         }
@@ -18,16 +17,21 @@
             border: 5px solid #fff;
         }
         .jawi { font-size: 30px; color: #2d5a52; margin-bottom: 10px; }
-        .hero-img { width: 100%; border-radius: 15px; margin-bottom: 15px; }
+        /* Gaya untuk gambar pensel warna comel */
+        .pencil-icon { width: 120px; height: auto; margin-bottom: 15px; animation: bounce 2s infinite; }
+        @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+        
         .hidden { display: none; }
         button { 
             padding: 12px 25px; background: #5ba192; color: white; 
-            border: none; border-radius: 20px; cursor: pointer; font-weight: bold;
+            border: none; border-radius: 20px; cursor: pointer; font-weight: bold; transition: 0.3s;
         }
+        button:hover { background: #467e72; transform: scale(1.05); }
         .option-btn { 
             display: block; width: 100%; margin: 10px 0; padding: 15px;
-            background: #f0f7f4; border: 2px solid #d1e8e2; border-radius: 15px;
+            background: #fdfdfd; border: 2px solid #f0f0f0; border-radius: 15px; font-size: 18px;
         }
+        .option-btn:hover { background: #e0f2f1; border-color: #5ba192; }
         table { width: 100%; border-collapse: collapse; margin-top: 20px; }
         th, td { border-bottom: 1px solid #eee; padding: 10px; }
     </style>
@@ -38,47 +42,48 @@
     <div class="jawi">لَاتِيَهَن ورنا</div>
     
     <div id="mula">
-        <img src="kartun_ghibli.jpg" class="hero-img">
-        <p>Jom bantu Aiman & Aliyah jawab kuiz warna!</p>
-        <input type="text" id="nama" placeholder="Taip nama anda..." style="padding:10px; width:80%; border-radius:10px; border:1px solid #ccc; margin-bottom:15px;"><br>
-        <button onclick="start()">Mula Sekarang</button>
+        <img src="Gemini_Generated_Image_nem4r4nem4r4nem4.jpg" style="width: 100%; border-radius: 20px; margin-bottom: 15px;">
+        <p>Jom bantu Aiman & Aliyah kenali warna-warna comel!</p>
+        <input type="text" id="nama" placeholder="Taip nama murid..." style="padding:12px; width:80%; border-radius:15px; border:2px solid #eee; margin-bottom:20px; text-align:center;"><br>
+        <button onclick="start()">Mula Belajar</button>
     </div>
 
     <div id="kuiz" class="hidden">
-        <img src="warna_ba.png" style="width:150px; margin-bottom:10px;">
-        <h1 id="soalan-arab" style="font-size: 45px; margin: 10px 0;"></h1>
+        <div id="imej-soalan"></div>
+        <h1 id="soalan-arab" style="font-size: 45px; margin: 10px 0; color: #2d5a52;"></h1>
         <div id="pilihan"></div>
     </div>
 
     <div id="tamat" class="hidden">
-        <h2>Tahniah!</h2>
-        <p id="papar-nama"></p>
-        <h1 style="color:#5ba192;">Markah: <span id="markah"></span> / 6</h1>
-        <h3>Carta Markah Keseluruhan:</h3>
+        <h2>Mumtaz! (Hebat)</h2>
+        <p>Tahniah, <strong id="papar-nama"></strong>!</p>
+        <h1 style="color:#5ba192; font-size: 50px;"><span id="markah"></span> / 6</h1>
+        <h3>📊 Carta Markah</h3>
         <table>
             <thead><tr><th>Nama</th><th>Markah</th></tr></thead>
             <tbody id="jadual"></tbody>
         </table>
         <br>
-        <button onclick="location.reload()">Main Semula</button>
+        <button onclick="location.reload()">Cuba Lagi</button>
     </div>
 </div>
 
 <script>
+    // Data soalan yang menyertakan setiap gambar yang disediakan
     const data = [
-        { q: "أَحْمَر", options: ["Merah", "Biru", "Hijau"], a: "Merah" },
-        { q: "أَزْرَق", options: ["Kuning", "Biru", "Hitam"], a: "Biru" },
-        { q: "أَخْضَر", options: ["Hijau", "Merah", "Putih"], a: "Hijau" },
-        { q: "أَصْفَر", options: ["Biru", "Hitam", "Kuning"], a: "Kuning" },
-        { q: "أَسْوَد", options: ["Hitam", "Putih", "Hijau"], a: "Hitam" },
-        { q: "أَبْيَض", options: ["Kuning", "Putih", "Merah"], a: "Putih" }
+        { q: "أَزْرَق", img: "biru.png", options: ["Merah", "Biru", "Hijau"], a: "Biru" },
+        { q: "أَخْضَر", img: "hijau.png", options: ["Kuning", "Hijau", "Hitam"], a: "Hijau" },
+        { q: "أَسْوَد", img: "hitam.png", options: ["Hitam", "Putih", "Merah"], a: "Hitam" },
+        { q: "أَصْفَر", img: "kuning.png", options: ["Biru", "Kuning", "Hijau"], a: "Kuning" },
+        { q: "أَحْمَر", img: "merah.png", options: ["Merah", "Putih", "Biru"], a: "Merah" },
+        { q: "أَبْيَض", img: "putih.png", options: ["Hitam", "Putih", "Kuning"], a: "Putih" }
     ];
 
     let skor = 0; let n = 0; let namaMurid = "";
 
     function start() {
         namaMurid = document.getElementById('nama').value;
-        if(!namaMurid) return alert("Sila masukkan nama!");
+        if(!namaMurid) return alert("Sila tulis nama dahulu!");
         document.getElementById('mula').classList.add('hidden');
         document.getElementById('kuiz').classList.remove('hidden');
         paparSoalan();
@@ -86,7 +91,10 @@
 
     function paparSoalan() {
         let s = data[n];
+        // Memaparkan gambar yang disediakan bagi setiap soalan
+        document.getElementById('imej-soalan').innerHTML = `<img src="${s.img}" class="pencil-icon">`;
         document.getElementById('soalan-arab').innerText = s.q;
+        
         let p = document.getElementById('pilihan');
         p.innerHTML = "";
         s.options.forEach(opt => {
@@ -109,9 +117,9 @@
         document.getElementById('papar-nama').innerText = namaMurid;
         document.getElementById('markah').innerText = skor;
 
-        let rekod = JSON.parse(localStorage.getItem('skor_tahun6')) || [];
+        let rekod = JSON.parse(localStorage.getItem('skor_v4')) || [];
         rekod.push({nama: namaMurid, markah: skor});
-        localStorage.setItem('skor_tahun6', JSON.stringify(rekod));
+        localStorage.setItem('skor_v4', JSON.stringify(rekod));
 
         let jadual = document.getElementById('jadual');
         rekod.slice(-5).reverse().forEach(r => {
