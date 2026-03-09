@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <title>Kuiz Warna Bahasa Arab Tahun 6</title>
+    <style>
+        body { 
+            /* Latar belakang ceria bertema pastel */
+            background: linear-gradient(135deg, #FFDEE9 0%, #B5FFFC 100%);
+            font-family: 'Arial', sans-serif;
+            display: flex; justify-content: center; align-items: center;
+            min-height: 100vh; margin: 0;
+        }
+        .container { 
+            background: white; padding: 30px; border-radius: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            text-align: center; max-width: 500px; width: 90%;
+            border: 5px solid #fff;
+        }
+        .jawi { font-size: 30px; color: #2d5a52; margin-bottom: 10px; }
+        .hero-img { width: 100%; border-radius: 15px; margin-bottom: 15px; }
+        .hidden { display: none; }
+        button { 
+            padding: 12px 25px; background: #5ba192; color: white; 
+            border: none; border-radius: 20px; cursor: pointer; font-weight: bold;
+        }
+        .option-btn { 
+            display: block; width: 100%; margin: 10px 0; padding: 15px;
+            background: #f0f7f4; border: 2px solid #d1e8e2; border-radius: 15px;
+        }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { border-bottom: 1px solid #eee; padding: 10px; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="jawi">لَاتِيَهَن ورنا</div>
+    
+    <div id="mula">
+        <img src="kartun_ghibli.jpg" class="hero-img">
+        <p>Jom bantu Aiman & Aliyah jawab kuiz warna!</p>
+        <input type="text" id="nama" placeholder="Taip nama anda..." style="padding:10px; width:80%; border-radius:10px; border:1px solid #ccc; margin-bottom:15px;"><br>
+        <button onclick="start()">Mula Sekarang</button>
+    </div>
+
+    <div id="kuiz" class="hidden">
+        <img src="warna_ba.png" style="width:150px; margin-bottom:10px;">
+        <h1 id="soalan-arab" style="font-size: 45px; margin: 10px 0;"></h1>
+        <div id="pilihan"></div>
+    </div>
+
+    <div id="tamat" class="hidden">
+        <h2>Tahniah!</h2>
+        <p id="papar-nama"></p>
+        <h1 style="color:#5ba192;">Markah: <span id="markah"></span> / 6</h1>
+        <h3>Carta Markah Keseluruhan:</h3>
+        <table>
+            <thead><tr><th>Nama</th><th>Markah</th></tr></thead>
+            <tbody id="jadual"></tbody>
+        </table>
+        <br>
+        <button onclick="location.reload()">Main Semula</button>
+    </div>
+</div>
+
+<script>
+    const data = [
+        { q: "أَحْمَر", options: ["Merah", "Biru", "Hijau"], a: "Merah" },
+        { q: "أَزْرَق", options: ["Kuning", "Biru", "Hitam"], a: "Biru" },
+        { q: "أَخْضَر", options: ["Hijau", "Merah", "Putih"], a: "Hijau" },
+        { q: "أَصْفَر", options: ["Biru", "Hitam", "Kuning"], a: "Kuning" },
+        { q: "أَسْوَد", options: ["Hitam", "Putih", "Hijau"], a: "Hitam" },
+        { q: "أَبْيَض", options: ["Kuning", "Putih", "Merah"], a: "Putih" }
+    ];
+
+    let skor = 0; let n = 0; let namaMurid = "";
+
+    function start() {
+        namaMurid = document.getElementById('nama').value;
+        if(!namaMurid) return alert("Sila masukkan nama!");
+        document.getElementById('mula').classList.add('hidden');
+        document.getElementById('kuiz').classList.remove('hidden');
+        paparSoalan();
+    }
+
+    function paparSoalan() {
+        let s = data[n];
+        document.getElementById('soalan-arab').innerText = s.q;
+        let p = document.getElementById('pilihan');
+        p.innerHTML = "";
+        s.options.forEach(opt => {
+            let btn = document.createElement('button');
+            btn.className = "option-btn";
+            btn.innerText = opt;
+            btn.onclick = () => {
+                if(opt === s.a) skor++;
+                n++;
+                if(n < data.length) paparSoalan();
+                else tamat();
+            };
+            p.appendChild(btn);
+        });
+    }
+
+    function tamat() {
+        document.getElementById('kuiz').classList.add('hidden');
+        document.getElementById('tamat').classList.remove('hidden');
+        document.getElementById('papar-nama').innerText = namaMurid;
+        document.getElementById('markah').innerText = skor;
+
+        let rekod = JSON.parse(localStorage.getItem('skor_tahun6')) || [];
+        rekod.push({nama: namaMurid, markah: skor});
+        localStorage.setItem('skor_tahun6', JSON.stringify(rekod));
+
+        let jadual = document.getElementById('jadual');
+        rekod.slice(-5).reverse().forEach(r => {
+            jadual.innerHTML += `<tr><td>${r.nama}</td><td>${r.markah}/6</td></tr>`;
+        });
+    }
+</script>
+</body>
+</html>
